@@ -1,0 +1,13 @@
+[Fitness] : 0.582313
+[Sensitivity] : 0
+[Specificity] : 1
+[Accuracy] : 0.521739
+[PPV] : 0
+[RMSE] : 0.691564
+[RRSE] : 1.38313
+[RAE] : 0.956522
+[MSE] : 0.478261
+[ADM] : 0.5
+[MDM] : 0.5
+[SIZE] : 1
+[OverLearn] : 0.7

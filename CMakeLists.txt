@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.16)
+project(fuzzycoco_debug VERSION 1.0 LANGUAGES C CXX)
+
+# we require at least C++17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_CXX_FLAGS "-g -fprofile-arcs -ftest-coverage -Wall -Werror")
+
+add_subdirectory(src)
+add_subdirectory(tests/unit)
+include_directories(${PROJECT_SOURCE_DIR}/src)
