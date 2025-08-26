@@ -39,8 +39,8 @@ set(SOURCE_FILES
 )
 
 # ==== fuzzy coco executable
-add_executable(fuzzycoco2.exe exec/fuzzy_coco_executable2.cpp)
-target_link_libraries(fuzzycoco2.exe fuzzycoco_static)
+add_executable(fuzzycoco.exe exec/fuzzy_coco_executable.cpp)
+target_link_libraries(fuzzycoco.exe fuzzycoco_static)
 
 add_library(fuzzycoco SHARED ${SOURCE_FILES})
 
