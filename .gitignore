@@ -1,0 +1,8 @@
+.*
+*.tar.*
+*.json
+*.a
+bin/
+callgrind*
+*.o
+
