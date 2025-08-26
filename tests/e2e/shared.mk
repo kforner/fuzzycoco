@@ -1,7 +1,7 @@
 ### Makefile to be included in tests subfolders
 
 # the default fuge-lc executable to use
-FUZZY_COCO?=$(TOPLEVEL)/bin/fuzzycoco2.exe
+FUZZY_COCO?=$(TOPLEVEL)/bin/fuzzycoco.exe
 
 # the script to use: must be overriden
 SCRIPT=
@@ -50,7 +50,10 @@ test/eval/all:
 
 test/predict: check/predict/available  predict/fuzzy_system check/predict
 test/predict/all:
-
+	@echo ===== PREDICTION tests =========================================
+	for seed in $(SEEDS); do \
+		$(MAKE) test/predict SEED=$$seed; \
+	done
 
 
 profile/fuzzy_system:
