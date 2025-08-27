@@ -30,6 +30,7 @@ FUGE-LC credits:
 - Genetic algorithm update by Yvan Da Silva (2012)
 - Code upgrade by [Rochus Keller](http://rochus-keller.ch/) <me@rochus.keller.ch> (2022)
 
+
 ## Contents
 
 This repository provides:
@@ -44,6 +45,7 @@ This repository provides:
 
   - [INSTALL.md](./INSTALL.md): how to build and install the software
   - [USAGE.md](./USAGE.md): how to run the software
+  - [PARAMS.md](./PARAMS.md): the description of the algorithm parameters 
   - [DEV.md](./DEV.md): instructions for developers and library users
   - [CHANGELOG.md](./CHANGELOG.md): All notable changes
 

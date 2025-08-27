@@ -18,7 +18,7 @@ struct VarsParams {
   VarsParams(const NamedList& desc);
   // the number of fuzzy sets to use for the Membership function associated with the variables
   int nb_sets = 3;
-  // the nb of bits to encode the variable index. N.B: for input var, at least one extra bit must be added to account for the DontCar
+  // the nb of bits to encode the variable index. N.B: for input var, at least one extra bit must be added to account for the DontCare
   int nb_bits_vars = MISSING_DATA_INT;
   // the nb of bits to encode the set index. Directy related to nb_sets
   int nb_bits_sets = MISSING_DATA_INT;
@@ -49,7 +49,7 @@ struct GlobalParams {
   // the number of rules for inferring the fuzzy system. Note that some rules may be discarded because of the "DontCare" mechanism
   int nb_rules = MISSING_DATA_INT;
   // the number of input variables "slots" using by the antecedents of rules
-  // default to all input variables. note that some vars may be discarded because of the "DontCare" mechanism
+  // note that some vars may be discarded because of the "DontCare" mechanism
   int nb_max_var_per_rule = MISSING_DATA_INT;
   // the maximum number of coevolution generations to compute. also cf max_fit
   int max_generations = 100;

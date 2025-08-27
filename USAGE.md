@@ -1,46 +1,136 @@
+How to use fuzzycoco <!-- omit from toc -->
+====================
+- [Synopsis](#synopsis)
+- [Overview](#overview)
+- [Fuzzy System Inference (or fit)](#fuzzy-system-inference-or-fit)
+- [Fuzzy System evaluation](#fuzzy-system-evaluation)
+- [Fuzzy System prediction](#fuzzy-system-prediction)
+- [file formats](#file-formats)
+  - [`params.json`](#paramsjson)
+  - [data file (input, output, both)](#data-file-input-output-both)
+  - [`fuzzy_system.json`](#fuzzy_systemjson)
+- [Data, scripts and parameters](#data-scripts-and-parameters)
+  - [Parameters](#parameters)
+    - [coevolution parameters](#coevolution-parameters)
+    - [Fitness evaluation parameters](#fitness-evaluation-parameters)
+    - [Fuzzy system parameters](#fuzzy-system-parameters)
+  - [Script](#script)
+
+N.B: we will focus here on using the `fuzzycoco.exe` executable.
+
+## Synopsis
+
+```
+# fit
+fuzzycoco.exe -d DATA.csv -p PARAMS.json --seed 123 > fuzzy_system.json
+# evaluate
+fuzzycoco.exe -d OTHER_DATA.csv -f fuzzy_system.json  --evaluate > eval.json
+# predict
+fuzzycoco.exe -d INPUT.csv -f fuzzy_system.json --predict > outcome.csv
+```
+
+## Overview
+
+There are three use cases:
+
+  1.  **Fuzzy System Inference (or fit)**. the goal is to start from a dataset of observations contains **input** and **output** variables and given a 
+      set of parameters to a **Fuzzy System** (Fuzzy rules + Membership functions): `fuzzy_system=fit(input, output, params)`
+
+  1. **Outcome Prediction**. Given an existing *Fuzzy System*, and a dataset of input variables, predict the corresponding **output** variables: `output=predict(fuzzy_system, input)`
+
+  1.**Fuzzy System evaluation**. Given an existing *Fuzzy System*, and a dataset of input and output variables, evaluate
+    the fitness of the fuzzy system on that dataset. `fitnesss=evaluate(fuzzy_system, input, output)`
+
+
+## Fuzzy System Inference (or fit)
+
+To fit a fuzzy system, you need a dataset `DATA.csv` and a set of params `PARAMS.json`. 
+This will generate a fuzzy system (cf [file formats](#file-formats)).
+It is highly suggested to set a RNG seed using `--seed` for reproducibility.
+
+
+```
+# output on stdout
+fuzzycoco.exe -d DATA.csv -p PARAMS.json --seed 123 | less
+# output in a file
+fuzzycoco.exe -d DATA.csv -p PARAMS.json --seed 123 -o results.json
+# verbose
+fuzzycoco.exe -d DATA.csv -p PARAMS.json --seed 123 --verbose
+```
+
+
+## Fuzzy System evaluation
+
+The goal is to evaluate the performance of a given fuzzy system `fuzzy_system.json` on a given dataset `OTHER_DATA.csv`:
+
+```
+fuzzycoco.exe -d OTHER_DATA.csv -f fuzzy_system.json  --evaluate > eval.json
+```
+
+This will generate a JSON output with the computed fitness along with fitness metrics.
+
+## Fuzzy System prediction
+
+The goal is to predict an outcome given a fuzzy system `fuzzy_system.json` on some input data `INPUT.csv`:
+
+Note that fuzzycoco.exe is smart enough, so that you can give it as input a full dataset (INPUT + OUTPUT variables)
+and it will automatically extract the INPUT data, so that you do not need to extract it yourself.
+
+```
+fuzzycoco.exe -d INPUT.csv -f fuzzy_system.json --predict > outcome.csv
+# or: give it a full dataset
+fuzzycoco.exe -d OTHER_DATA.csv -f fuzzy_system.json --predict > outcome.csv
+```
+
+The output is a CSV dataset of the predictions for each of the output variables.
 
 
 
-### 1. FUZZY SYSTEM CREATION
 
-In order to create a fuzzy system with FUGE-LC, the following steps must be performed:
-- compile the application (with QMake or CMake)
-- run the following command line :
- 
+## file formats
 
-    $ <path_to_FUGE-LC> -d <path_to_datasetFile> -s <path_to_scriptFile> -g no
-- the result will be a .ffs file containing the best fuzzy system found at the path specified in the script
+### `params.json`
 
-### 2. FUZZY SYSTEM EVALUATION
-In order to evaluate a fuzzy system with FUGE-LC, the following steps must be performed:
-- run the following command line :
- 
+The parameters file is in **JSON** with comments, i.e. you can add inline comments in the file with `#`.
+Most parameters have a default value, some may be computed from other parameters. 
+You will set some parameters in the `params.json` file, that will always have precedence over default values or computed
+values.
 
-    $ <path_to_FUGE-LC> --evaluate -f <path_to_fuzzySystemFile> -d <path_to_datasetFile> -s <path_to_scriptFile> -g no
-- the result will be a file containing the values of the fitness measurements for the fuzzy system evaluated
+You may look at one example: [/tests/e2e/iris36/params.json](./tests/e2e/iris36/params.json)
+
+### data file (input, output, both)
+
+The data file must:
+
+  - be in **CSV** format 
+  - use a semi-colon `;` delimiter, 
+  - have a header line
+  - have output variable(s) appear AFTER the input variables.
+
+### `fuzzy_system.json`
+
+The description of a fuzzy system is a **JSON** file.
+The overall structure is:
+
+  - fit{}
+    - fitness
+    - metrics{}
+    - generations
+  - fuzzy_system{}
+    - variables{}
+      - input[]
+      - output[]
+    - rules[], 
+    - default_rules[]
+  - params{}
+
+You can find an example here: [/tests/e2e/iris36/results/seed.123/fuzzy_system.json](./tests/e2e/iris36/results/seed.123/fuzzy_system.json)
 
 
-
-### 3. FUZZY SYSTEM PREDICTION
-In order to predict with a fuzzy system with FUGE-LC, the following steps must be performed:
-- run the following command line :
- 
-
-    $ <path_to_FUGE-LC> --predict -f <path_to_fuzzySystemFile> -d <path_to_datasetFile> -s <path_to_scriptFile> -g no -p yes
-- the result will be a file containing the values of the fitness measurements for the fuzzy system evaluated
-This feature allows predicting the results for a database without outputs. The database the
-user specifies must have no output rows as the program will propose to save the
-prediction. This will result in adding a row for the prediction of each output variable.
 
 
 
 ## Data, scripts and parameters
-### Dataset
-The database file must meet the following requirements:
-
-- CSV file type, separated by semicolons
-- Each row (samples) and each column (variables) must start with a label
-- The output variables must be placed in the last columns
 
 
 ### Parameters
