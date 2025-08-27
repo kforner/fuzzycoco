@@ -11,6 +11,11 @@ For more information about the method, please refer to Prof. Carlos Andrés Peñ
 Reyes' thesis entitled "Coevolutionary Fuzzy Modeling" 
 (*Fuzzy CoCo: a cooperative-coevolutionary approach to fuzzy modeling* from [Carlos Andrés Peña-Reyes](https://orcid.org/0000-0002-2113-6498)).
 
+## License
+
+This fuzzycoco software is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).  
+See the [LICENSE](./LICENSE) file for details.
+
 ## Acknowledgements
 
 This software is a complete rewrite of the FUGE-LC software by Karl Forner.
