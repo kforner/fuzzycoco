@@ -9,10 +9,6 @@ How to use fuzzycoco <!-- omit from toc -->
   - [`params.json`](#paramsjson)
   - [data file (input, output, both)](#data-file-input-output-both)
   - [`fuzzy_system.json`](#fuzzy_systemjson)
-- [Data, scripts and parameters](#data-scripts-and-parameters)
-  - [Parameters](#parameters)
-    - [coevolution parameters](#coevolution-parameters)
-    - [Fitness evaluation parameters](#fitness-evaluation-parameters)
     - [Fuzzy system parameters](#fuzzy-system-parameters)
   - [Script](#script)
 
@@ -85,8 +81,6 @@ fuzzycoco.exe -d OTHER_DATA.csv -f fuzzy_system.json --predict > outcome.csv
 The output is a CSV dataset of the predictions for each of the output variables.
 
 
-
-
 ## file formats
 
 ### `params.json`
@@ -96,7 +90,8 @@ Most parameters have a default value, some may be computed from other parameters
 You will set some parameters in the `params.json` file, that will always have precedence over default values or computed
 values.
 
-You may look at one example: [/tests/e2e/iris36/params.json](./tests/e2e/iris36/params.json)
+Check [PARAMS.md](./PARAMS.md) for the parameters documentation.
+You may also look at one example: [/tests/e2e/iris36/params.json](./tests/e2e/iris36/params.json)
 
 ### data file (input, output, both)
 
@@ -129,32 +124,6 @@ You can find an example here: [/tests/e2e/iris36/results/seed.123/fuzzy_system.j
 
 
 
-
-## Data, scripts and parameters
-
-
-### Parameters
-#### coevolution parameters
-
-The coevolution algorithm can be configured via the following parameters:
-
-- Number of generations to reach before stopping the evolution
-- Maximum fitness threshold to reach before stopping the evolution
-- Size of the populations (number of individuals)
-- Size of the elite (best individuals kept unchanged between to generations)
-- Crossover probability
-- Probability that an individual is a target for a mutation
-- Probability that a bit of an individual is mutated
-
-#### Fitness evaluation parameters
-
-These parameters determine how the overall fitness of a system will be evaluated. A value is computed for all the following measurements and a weight for each one can be selected. The fitness value is the sum of these measurements multiplied by their weight. The measurements available are:
-
-- Sensitivity : TruePos / (TruePos + FalseNeg)
-- Specificity : TrueNeg / (TrueNeg + FalsePos)
-- Accuracy : (TruePos +TrueNeg) / (TruePos + TrueNeg + FalsePos + FalseNeg)
-- PPV : TruePos / (TruePos + FalsePos)
-- RMSE : Root Mean Square Error
 
 It is also possible to choose the threshold applied to the output values. Generally, it is selected in the middle of the minimum and maximum value.
 

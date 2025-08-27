@@ -215,6 +215,7 @@ Parameters controllling how the fitness of fuzzy systems is computed.
     value is greater or equal to that threshold, it is defuzzyfied as POSITIVE, otherwise NEGATIVE.
   - **Mandatory**
   - it is an array, there should be one value per OUTPUT variable.
+  - Usually, it is set in the middle of variable range.
   - N.B: in case there are multiple OUTPUT variables, but only one threshold is set, this threshold is *automatically* applied to all OUTPUT variables for convenience. 
 
 ### features_weights

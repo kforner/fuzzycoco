@@ -1,18 +1,6 @@
-fuzzy coco
-===========
+fuzzy coco: developers documentation
+====================================
 
-## requirements
-
-This requires 
-
-- a c++ 2017 compliant compiler.
-- make and cmake for building
-- lcov for the test coverage
-- gdb and valgrind can be very useful for debugging
-
-## devcontainer
-
-A devcontainer is provided, that can be used with vscode seamlessly, cf `.devcontainer/Dockerfile`
 
 ## building / testing 
 
@@ -40,14 +28,3 @@ TODO
 
 - `make build coverage` will generate a HTML test coverage report in `.coverage/src/index.html`.
 
-### building the Release version
-
-This the optimized version.
-
-```
-cd Release
-make build
-```
-This builds `fuzzycoco.exe`, `libfuzzycoco.so` and `libfuzzycoco_static.a` in `Release/.build/.bin/`
-
-Type `make install` to copy the `fuzzycoco.exe` in `bin/`
