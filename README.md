@@ -1,6 +1,8 @@
 fuzzycoco
 ====================================================================================================
 
+[![unit tests](https://github.com/Lonza-RND-Data-Science/fuzzycoco/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/Lonza-RND-Data-Science/fuzzycoco/actions/workflows/unit_tests.yml)
+
 ## Introduction
 
 This is a C++ implementation of the **FuzzyCoCo** algorithm.
