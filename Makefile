@@ -11,6 +11,10 @@ build:
 test:
 	cd .build/tests/unit && ctest
 
+JUNIT_XML=$(PWD)/junit.xml
+test/junit:
+	cd .build/tests/unit && ctest --output-junit $(JUNIT_XML)
+
 test/memcheck:
 	cd .build/tests/unit && ctest --verbose --memcheck --overwrite MemoryCheckCommandOptions="--leak-check=full --error-exitcode=1"
 
@@ -20,12 +24,17 @@ debug:
 verbose:
 	cd .build/tests/unit && ctest -V
 
+COVERAGE_INFO=.coverage/coverage.info
 coverage/info:
 	mkdir -p .coverage
-	lcov --capture --directory . --output-file .coverage/coverage.info
+	rm -f $(COVERAGE_INFO)
+	lcov --capture --base-directory .build/src --directory .build/src --filter brace --rc genhtml_exclude_lines="};" --output-file $(COVERAGE_INFO)
+	# Remove external/irrelevant directories
+	lcov --remove $(COVERAGE_INFO) '/usr/*' '\d*' '*/tests/*' 'tests/*' --ignore-errors unused --output-file $(COVERAGE_INFO)
+	lcov --list $(COVERAGE_INFO)
 
 coverage/html:
-	genhtml .coverage/coverage.info --output-directory .coverage	
+	genhtml .coverage/coverage.info --output-directory .coverage
 
 coverage: test coverage/info coverage/html
 
