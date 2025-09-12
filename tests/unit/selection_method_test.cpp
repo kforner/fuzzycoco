@@ -86,5 +86,7 @@ TEST(ElitismWithRandomMethod, selectEntities) {
   for (int i = 0; i < 9; i++) 
     EXPECT_EQ(indexes[i], 99 - i);
   EXPECT_NE(indexes[9], 99 -9);
-  cerr << indexes;
+  // cerr << indexes << endl;;
+
+
 }

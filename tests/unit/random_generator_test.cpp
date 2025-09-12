@@ -1,8 +1,11 @@
 #include <gtest/gtest.h>
 #include <algorithm>
+#include <cstring>
 #include "random_generator.h"
+#include "digest.h"
 
 using namespace fuzzy_coco;
+using namespace Digest;
 
 template<typename T>
 ostream& operator<<(ostream& out, const vector<T>& v) {
@@ -89,4 +92,55 @@ TEST(RandomGenerator, vector) {
   }
   EXPECT_DOUBLE_EQ(rng1.random(v), v[rng2.random(0, nb - 1)]);
 
+}
+
+TEST(mt19937, portability) {
+    std::mt19937 mt(666);
+    uint_fast32_t expected[10] = {3008354540,440739714,3625754029,907667358,2905606974,553951302,3126126537,3222645150,4086480804,1442973117};
+
+    for (int i = 0; i < 10; i++) {
+      EXPECT_EQ(mt(), expected[i]);
+    }
+
+    
+    {
+      RandomGenerator rng(123);
+      for (int i = 0; i < 20; i++) {
+        int r = rng.random();
+        double norm1 = double(r) / double(mt19937::max() + 1.0);
+        double norm2 = std::ldexp(r, -32);
+        // cout  << setprecision(numeric_limits<double>::max_digits10 * 2)  << norm1 << "," << norm2 << endl;
+        // EXPECT_EQ(k, expected[i]);
+      }
+
+      int r = mt19937::max();
+      double norm1 = double(r) / double(mt19937::max() + 1.0);
+      double norm2 = std::ldexp(r, -32);
+      cout  << setprecision(numeric_limits<double>::max_digits10 * 2)  << r << ":" << norm1 << "," << norm2 << endl;
+
+    }
+
+
+    // random
+    {
+      RandomGenerator rng(123);
+      int expected[] = {-1283394130,1572590647,-1408460518,2045083368,1182622138,-1864563734,1697250018,-1459027229,1100910199,-2067864206,-1498199443,848784249,-1599039828,-1834388561,-1758575032,-1472022046,-1615485263,-1953253780,988267000,-410378308};
+      for (int i = 0; i < 20; i++) {
+        int r1 = rng.random();
+        int r2 = rng.random();
+        int k = rng.random(min(r1, r2), max(r1, r2));
+        // cout << k << ",";
+        EXPECT_EQ(k, expected[i]);
+      }
+
+    }
+
+    // macOs bug
+    {
+// -944773575, 2109339754, 1817228411, 2045083367.675199031829833984375, 41de795fb9eb3676
+      int x = -944773575;
+      int r1 = 1817228411;
+      int r2 = 2109339754;
+      EXPECT_EQ(double_to_hex(RandomGenerator::scale_int_to_double_strict(x, r1, r2)), "41de795fb9eb3676");
+    }
 }

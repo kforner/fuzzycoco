@@ -70,6 +70,7 @@ Genomes FuzzyCocoEngine::buildRulesGenomes(int nb_pop_rules) {
   for (int i = 0; i < nb_pop_rules; i++) {
     Genome rules_geno = getFuzzyCocoCodec().buildRulesGenome();
     randomize(rules_geno, _rng);
+
     rules.push_back(rules_geno);
   }
   return rules;

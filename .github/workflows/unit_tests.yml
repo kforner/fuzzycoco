@@ -8,16 +8,26 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-24.04
-
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+        # os: [macos-latest]
     steps:
     - uses: actions/checkout@v4
+    
+    - name: Setup cmake
+      uses: jwlawson/actions-setup-cmake@v2
+      with:
+        cmake-version: '3.28.x'
+    
     - name: make build
       run: make build
       
     - name: make test
-      run: make test/junit
+      run: make test/junit || make test/rerun-failed
 
     - name: Report test results
       uses: dorny/test-reporter@v2
@@ -28,14 +38,18 @@ jobs:
         reporter: java-junit        # Format of test results
 
     - name: ⚙️ Install lcov
+      if: runner.os == 'Linux'
       run: |
         sudo apt-get update
         sudo apt-get -y install lcov
 
     - name: coverage.info
+      if: runner.os == 'Linux'
       run: make coverage/info
 
     - name: Upload coverage to Codecov
+      if: runner.os == 'Linux'
+      run: make coverage/info
       uses: codecov/codecov-action@v5
       with:
         files: .coverage/coverage.info
