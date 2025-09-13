@@ -2,9 +2,7 @@ name: unit tests
 
 on:
   push:
-    # branches: [ "main" ]
   pull_request:
-    # branches: [ "main" ]
 
 jobs:
   build:
@@ -13,8 +11,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
+        # Temporarily commenting out windows until we fix the DLL issues
         # os: [ubuntu-latest, windows-latest, macos-latest]
-        # os: [macos-latest]
     steps:
     - uses: actions/checkout@v4
     
@@ -22,6 +20,15 @@ jobs:
       uses: jwlawson/actions-setup-cmake@v2
       with:
         cmake-version: '3.28.x'
+    
+    # Add MinGW to PATH on Windows
+    - name: Setup Windows
+      if: runner.os == 'Windows'
+      run: |
+        echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
+        # Ensure the DLL directory is in the Path
+        echo "PATH=$PATH;C:\msys64\mingw64\bin" >> $GITHUB_ENV
+      shell: bash
     
     - name: make build
       run: make build
@@ -31,11 +38,11 @@ jobs:
 
     - name: Report test results
       uses: dorny/test-reporter@v2
-      if: ${{ !cancelled() }}       # run this step even if previous step failed
+      if: ${{ !cancelled() }}
       with:
-        name: unit Tests            # Name of the check run which will be created
-        path: junit.xml    # Path to test results
-        reporter: java-junit        # Format of test results
+        name: unit Tests
+        path: junit.xml
+        reporter: java-junit
 
     - name: ⚙️ Install lcov
       if: runner.os == 'Linux'
@@ -49,11 +56,9 @@ jobs:
 
     - name: Upload coverage to Codecov
       if: runner.os == 'Linux'
-      run: make coverage/info
       uses: codecov/codecov-action@v5
       with:
         files: .coverage/coverage.info
         flags: unittests
         fail_ci_if_error: true
         token: ${{ secrets.CODECOV_TOKEN }}
-  
