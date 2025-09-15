@@ -15,7 +15,7 @@ test/rerun-failed:
 	ctest --test-dir .build/tests/unit/ --output-on-failure --rerun-failed
 
 test/junit:
-	ctest --test-dir .build/tests/unit/ --output-junit junit.xml
+	ctest --test-dir .build/tests/unit/ --output-junit ../../../junit.xml
 
 test/memcheck:
 	ctest --test-dir .build/tests/unit --verbose --memcheck --overwrite MemoryCheckCommandOptions="--leak-check=full --error-exitcode=1"
