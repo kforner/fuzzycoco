@@ -1,24 +1,9 @@
-#include <gtest/gtest.h>
+#include "tests.h"
 #include "coevolution_engine.h"
 
 using namespace fuzzy_coco;
 
-// template<typename T>
-// ostream& operator<<(ostream& out, const vector<T>& v) {
-//   out << "{";
-//   const int nb = v.size() - 1;
-//   for (int i = 0; i < nb; ++i) {
-//       out << v[i] << ", "; 
-//   }
-//   if (nb >= 0) out << v[nb];
-//   out << "}";
-//   return out;
-// }
-template<typename T, class UnaryPred>
-bool all(const vector<T>& v, UnaryPred pred) { 
-  return all_of(v.cbegin(), v.cend(), pred);
-}
-auto sum = [](auto v) { return accumulate(v.begin(), v.end(), 0); };
+
 
 class AlignedBitsFitness : public CoopCoevolutionFitnessMethod {
 public:
@@ -54,10 +39,6 @@ TEST(CoEvolutionEngine, evolve) {
   }
   // N.B: inequal pop sizes
 
-
-
-  int maxGen = 10;
-  double maxFit = 1;
   EvolutionParams params;
   params.elite_size = 2;
   params.cx_prob = 1;
@@ -77,8 +58,7 @@ TEST(CoEvolutionEngine, evolve) {
   auto [lastgen, generation_fitnesses] = coevo.evolve(left_genomes, right_genomes, 20, 1);
   EXPECT_EQ(lastgen.generation_number, 20);
 
-  int nb_gen = generation_fitnesses.size();
-  cerr << "fitnesses: " << generation_fitnesses << endl;
+  // cerr << "fitnesses: " << generation_fitnesses << endl;
 
   EXPECT_EQ(lastgen.left_gen.individuals.size(), left_genomes.size());
   EXPECT_EQ(lastgen.right_gen.individuals.size(), right_genomes.size());
@@ -110,9 +90,6 @@ TEST(CoEvolutionEngine, iterator) {
     right_genomes.push_back(zero);
   }
 
-  int maxGen = 10;
-  double maxFit = 1;
-
   EvolutionParams params;
   params.elite_size = 2;
   params.cx_prob = 1;
@@ -132,7 +109,7 @@ TEST(CoEvolutionEngine, iterator) {
     generation_fitnesses.push_back(gen.fitness);
   }
   EXPECT_EQ(gen.generation_number, 20);
-  double fitness = gen.fitness;
+
   // ========= selectBest =========
   auto [left_best, right_best] = coevo.getBest();
   int nbbest = left_best.size();

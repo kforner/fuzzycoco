@@ -10,52 +10,85 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        # Temporarily commenting out windows until we fix the DLL issues
-        # os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          # - os:  windows-2022
+          #   compiler: msvc
+          - os: windows-latest
+            compiler: gcc 
+          - os: ubuntu-latest
+          - os: macos-latest
+
     steps:
+
+    #checkout the git repo
     - uses: actions/checkout@v4
     
-    - name: Setup cmake
-      uses: jwlawson/actions-setup-cmake@v2
+    # install common c++ software: here gcc, cmake, make, git...
+    - name: Setup Cpp
+      uses: aminya/setup-cpp@v1
       with:
-        cmake-version: '3.28.x'
-    
-    # Add MinGW to PATH on Windows
+        compiler: ${{ matrix.compiler }}
+        cmake: true
+        make: true
+
+
+    # Updated Windows setup step: try to fix mingw c++ build on windows to correctly execute executables
     - name: Setup Windows
       if: runner.os == 'Windows'
       run: |
-        echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
-        # Ensure the DLL directory is in the Path
-        echo "PATH=$PATH;C:\msys64\mingw64\bin" >> $GITHUB_ENV
+        # Add to current shell PATH
+        export PATH="/c/Users/runneradmin/gcc/mingw64/bin:$PATH"
+        # # Create a more comprehensive PATH update that includes lib directory
+        echo "PATH=$PATH:/c/Users/runneradmin/gcc/mingw64/bin:/c/Users/runneradmin/gcc/mingw64/lib" >> $GITHUB_ENV
+
+        echo "${{ github.workspace }}/.build/src/" >> $GITHUB_PATH
+
+        # Verify GCC installation
+        gcc --version
+        # # List available DLLs (for debugging)
+        # ls /c/Users/runneradmin/gcc/mingw64/bin/*.dll
       shell: bash
     
+    # build all the c++ source files, tests included
     - name: make build
-      run: make build
-      
-    - name: make test
-      run: make test/junit || make test/rerun-failed
+      run: | 
+        cmake  -S . -B .build
+        cmake --build .build/ -j 4
+      env:
+        CMAKE_TLS_VERIFY: "0"
+        CMAKE_GENERATOR: "Unix Makefiles"
+      # shell: bash
 
+    # run the unit tests
+    - name: make test
+      run: |
+        ctest --test-dir .build/tests/unit/ --output-junit ../../../junit.xml || ctest --test-dir .build/tests/unit/ --output-on-failure --rerun-failed
+      env:
+        GTEST_CATCH_EXCEPTIONS: "0"
+
+    # display nicely the test  results
     - name: Report test results
       uses: dorny/test-reporter@v2
-      if: ${{ !cancelled() }}
+      if: ${{ !cancelled() && runner.os != 'Windows' }}
       with:
         name: unit Tests
         path: junit.xml
         reporter: java-junit
 
+    # install lcov for parsing the test coverage
     - name: ⚙️ Install lcov
-      if: runner.os == 'Linux'
+      if: runner.os == 'Linux' && github.ref == 'refs/heads/main'
       run: |
         sudo apt-get update
         sudo apt-get -y install lcov
 
+    # generate the test coverage info
     - name: coverage.info
-      if: runner.os == 'Linux'
+      if: runner.os == 'Linux' && github.ref == 'refs/heads/main'
       run: make coverage/info
 
     - name: Upload coverage to Codecov
-      if: runner.os == 'Linux'
+      if: runner.os == 'Linux' && github.ref == 'refs/heads/main'
       uses: codecov/codecov-action@v5
       with:
         files: .coverage/coverage.info

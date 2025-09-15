@@ -34,7 +34,7 @@ public:
     int get_as_int() const {
       double v = get_numeric();
       int i = static_cast<int>(v);
-      if (i != v) throw runtime_error("numeric value is not an integer: " + to_string(v));
+      if (i != v) throw runtime_error("numeric value is not an integer: " + std::to_string(v));
       return i;
     }
 
@@ -68,7 +68,7 @@ public: // ========= main read-only user interface =================
   bool is_scalar() const { return !_value.is_null(); }
   bool is_list() const { return !is_scalar(); }
   // N.B: size==0 for scalar
-  int size() const { return _children.size(); }
+  size_t size() const { return _children.size(); }
 
   // accessing elements
   const NamedList& operator[](int idx) const { return _children.at(idx); }

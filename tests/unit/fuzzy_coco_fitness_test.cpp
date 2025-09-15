@@ -1,4 +1,5 @@
-#include <gtest/gtest.h>
+#include "tests.h"
+#include <algorithm>
 #include "fuzzy_coco.h"
 #include "logging_logger.h"
 
@@ -208,11 +209,6 @@ TEST(FuzzyCocoFitnessMethod, fitnessImpl) {
   cerr << "fit=" << fit << endl;
 
   EXPECT_TRUE(fit < 0.2);
-}
-
-template<typename T, class UnaryPred>
-bool all(const vector<T>& v, UnaryPred pred) { 
-  return all_of(v.cbegin(), v.cend(), pred);
 }
 
 

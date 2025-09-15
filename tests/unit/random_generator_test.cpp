@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "tests.h"
 #include <algorithm>
 #include <cstring>
 #include "random_generator.h"
@@ -104,14 +104,6 @@ TEST(mt19937, portability) {
 
     
     {
-      RandomGenerator rng(123);
-      for (int i = 0; i < 20; i++) {
-        int r = rng.random();
-        double norm1 = double(r) / double(mt19937::max() + 1.0);
-        double norm2 = std::ldexp(r, -32);
-        // cout  << setprecision(numeric_limits<double>::max_digits10 * 2)  << norm1 << "," << norm2 << endl;
-        // EXPECT_EQ(k, expected[i]);
-      }
 
       int r = mt19937::max();
       double norm1 = double(r) / double(mt19937::max() + 1.0);

@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "tests.h"
 #include "fuzzy_coco.h"
 #include "file_utils.h"
 #include "logging_logger.h"
@@ -7,10 +7,6 @@ using namespace fuzzy_coco;
 using namespace FileUtils;
 using namespace logging;
 
-template<typename T, class UnaryPred>
-bool all(const vector<T>& v, UnaryPred pred) { 
-  return all_of(v.cbegin(), v.cend(), pred);
-}
 
 
 string CSV = 
@@ -109,7 +105,6 @@ TEST_F(FuzzyCocoTest, run) {
   cerr << endl << "best pair: " << endl;
   cerr << best_rule << endl << best_mf << endl;
 
-  auto& fs = coco.getFuzzySystem();
   coco.getFitnessMethod().setRulesGenome(best_rule);
   coco.getFitnessMethod().setMFsGenome(best_mf);
 

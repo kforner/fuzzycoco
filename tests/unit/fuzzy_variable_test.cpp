@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "tests.h"
 #include <cstdio>
 #include "file_utils.h"
 
@@ -215,8 +215,7 @@ TEST(FuzzyVariablesDB, basic) {
 
     // check that setPositions() sort the values
     Matrix<double> matin2 = matin;
-    double temp;
-    
+
     swap(matin2[0][0], matin2[0][2]);
     swap(matin2[1][0], matin2[1][1]);
     Matrix<double> matout2 = matout;

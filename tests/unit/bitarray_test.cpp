@@ -1,9 +1,10 @@
-#include <gtest/gtest.h>
+
+#include "tests.h"
 #include "bitarray.h"
 
 using namespace fuzzy_coco;
 
-auto sum = [](auto v) { return accumulate(v.begin(), v.end(), 0); };
+
 using namespace BitArrayUtils;
 TEST(bitarray, decode_number) {
   BitArray bits(8*100, false);
@@ -44,7 +45,7 @@ TEST(bitarray, randomize) {
 
   randomize(bits, rng);
   EXPECT_TRUE(sum(bits) > 0);
-  EXPECT_TRUE(sum(bits) < bits.size());
+  EXPECT_TRUE(sum(bits) < int(bits.size()));
 
   // reproducible
   BitArray bits2(100);

@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "tests.h"
 #include "fuzzy_rule.h"
 #include "fuzzy_operator.h"
 
@@ -13,22 +13,32 @@ TEST(FuzzyRule, ctor_filter) {
   EXPECT_EQ(rule1.getNbOutputConditions(), 1);
   EXPECT_EQ(rule1.getOutputConditionIndex(0), ConditionIndex({0, 0}));
 
+  cerr << rule1 << endl;
+
   FuzzyRule rule2(db, {{0, 2}, {0, 0}}, {{5, 0}, {5, 0}}, true);
   //                     GOOD     DUP      BAD     BAD
   EXPECT_EQ(rule2.getNbInputConditions(), 1);
   EXPECT_EQ(rule2.getInputConditionIndex(0), ConditionIndex({0, 2})); // took the first one
   EXPECT_EQ(rule2.getNbOutputConditions(), 0);
 
+    cerr << rule2 << endl;
+
   FuzzyRule rule3(db, {{0, 0}, {1, 1}}, { {0,0}, {0, 1}}, true);
   //                     GOOD     GOOD      GOOD     DUP
   EXPECT_EQ(rule3.getNbInputConditions(), 2);
   EXPECT_EQ(rule3.getNbOutputConditions(), 1);
-  EXPECT_EQ(rule2.getOutputConditionIndex(0), ConditionIndex({0, 0})); // took the first one
+  EXPECT_EQ(rule3.getOutputConditionIndex(0), ConditionIndex({0, 0})); // took the first one
+
+  cerr << rule3 << endl;
 
   FuzzyRule rule4(db,  {{0, 0}, {1, 1}},  {{0, 0}, {1, 1}}, true);
   //                     GOOD     GOOD      GOOD     GOOD
   EXPECT_EQ(rule4.getNbInputConditions(), 2);
   EXPECT_EQ(rule4.getNbOutputConditions(), 2);
+
+
+  cerr << rule4 << endl;
+
 }
 
 TEST(FuzzyOperatorAND, operate) {

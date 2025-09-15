@@ -1,4 +1,5 @@
-#include <gtest/gtest.h>
+#include "tests.h"
+#include <algorithm>
 #include "file_utils.h"
 #include "fuzzy_system.h"
 #include "logging_logger.h"
@@ -15,14 +16,6 @@ day3;24;NA;70
 day4;5;3;2
 )";
 
-template<typename T, class UnaryPred>
-bool all(const vector<T>& v, UnaryPred pred) { 
-  return all_of(v.cbegin(), v.cend(), pred);
-}
-
-template<typename T>
-bool all_zero(const vector<T>& v) { return all(v, [](T t) { return t == 0; });
-}
 
 // cf coco book pp26 fig 1.12
 string DB_BOOK_112 = R"(
@@ -476,7 +469,7 @@ TEST_F(FuzzySystemTestNoThreshold, predict) {
 
   auto predicted = fs.predict(DFIN);
   NumColumn expected = {0, 98, 50, 0};
-  for (int i = 0; i < expected.size(); i++)
+  for (auto i = 0U; i < expected.size(); i++)
     EXPECT_DOUBLE_EQ(predicted[0][i], expected[i]);
 }
 

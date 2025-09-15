@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "tests.h"
 #include <cstdio>
 #include "file_utils.h"
 #include "dataframe.h"
@@ -138,7 +138,7 @@ TEST(df, subsetColumns_col_idx) {
   EXPECT_EQ(df2.nbcols(), 3);
   EXPECT_EQ(df2.rownames(), df.rownames()); 
 
-  for (int i = 0; i < col_idx.size(); i++) {
+  for (auto i = 0U; i < col_idx.size(); i++) {
     EXPECT_EQ(df2.colnames()[i], df.colnames()[col_idx[i]]);
     EXPECT_EQ(df2[i], df[col_idx[i]]);
   }
